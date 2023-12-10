@@ -1,0 +1,169 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+// Tour Information Struct
+struct TourInfo {
+    string startDate;
+    string startLocation;
+    vector<string> otherInfo;
+};
+
+// Tourist Struct
+struct Tourist {
+    string name;
+    int bookingNo;
+    int noOfPersons;
+    TourInfo tourInfo;
+};
+
+// Tour Train Struct
+struct TourTrain {
+    string trainNo;
+    vector<Tourist> listOfTourists;
+};
+
+// Global Variables
+vector<TourTrain> listOfTrains;
+map<int, Tourist> listOfTourists;
+
+// Function to create Tour Train
+void createTourTrain() {
+    cout << "Enter Train No: ";
+    string trainNo;
+    cin >> trainNo;
+    TourTrain train;
+    train.trainNo = trainNo;
+    listOfTrains.push_back(train);
+}
+
+// Function to book a tour
+void bookTour() {
+    cout << "Enter Tourist Name: ";
+    string name;
+    cin >> name;
+    cout << "Enter Number of Persons: ";
+    int numOfPersons;
+    cin >> numOfPersons;
+    cout << "Enter Start Date: ";
+    string startDate;
+    cin >> startDate;
+    cout << "Enter Start Location: ";
+    string startLocation;
+    cin >> startLocation;
+    TourInfo info;
+    info.startDate = startDate;
+    info.startLocation = startLocation;
+    Tourist tourist;
+    tourist.name = name;
+    tourist.noOfPersons = numOfPersons;
+    tourist.tourInfo = info;
+    int bookingNo = listOfTourists.size() + 1;
+    tourist.bookingNo = bookingNo;
+    listOfTourists[bookingNo] = tourist;
+    cout << "Booking Successful. Booking No: " << bookingNo << endl;
+}
+
+// Function to add a tourist to a tour train
+void addTouristToTourTrain() {
+    cout << "Enter Booking No: ";
+    int bookingNo;
+    cin >> bookingNo;
+    Tourist tourist = listOfTourists[bookingNo];
+    cout << "Enter Train No: ";
+    string trainNo;
+    cin >> trainNo;
+    for (int i = 0; i < listOfTrains.size(); i++) {
+        if (listOfTrains[i].trainNo == trainNo) {
+            listOfTrains[i].listOfTourists.push_back(tourist);
+            cout << "Tourist Added to Tour train Successfully" << endl;
+            return;
+        }
+    }
+    cout << "Train Not Found" << endl;
+}
+
+// Function to cancel a booking
+void cancelBooking() {
+    cout << "Enter Booking No: ";
+    int bookingNo;
+    cin >> bookingNo;
+    listOfTourists.erase(bookingNo);
+    cout << "Booking Cancelled Successfully" << endl;
+}
+
+// Function to increase/decrease number of accompanying persons
+void modifyNoOfPersons() {
+    cout << "Enter Booking No: ";
+    int bookingNo;
+    cin >> bookingNo;
+    Tourist tourist = listOfTourists[bookingNo];
+    cout << "Enter Number of Persons: ";
+    int numOfPersons;
+    cin >> numOfPersons;
+    tourist.noOfPersons = numOfPersons;
+    listOfTourists[bookingNo] = tourist;
+    cout << "Number of Persons Modified Successfully" << endl;
+}
+
+// Function to print Tour Train Information
+void printTourTrainInfo() {
+    cout << "Enter Train No: ";
+    string trainNo;
+    cin >> trainNo;
+    for (int i = 0; i < listOfTrains.size(); i++) {
+        if (listOfTrains[i].trainNo == trainNo) {
+            vector<Tourist> tourists = listOfTrains[i].listOfTourists;
+            if (tourists.size() == 0) {
+                cout << "No Tourists in this Train" << endl;
+            }
+            else {
+                cout << "Tourists in Train " << trainNo << ":" << endl;
+                for (int j = 0; j < tourists.size(); j++) {
+                    cout << tourists[j].name << " (Booking No: " << tourists[j].bookingNo << ", No of Persons: " << tourists[j].noOfPersons << ")" << endl;
+                }
+            }
+        }
+    }
+}
+
+// Main Function
+int main() {
+    int choice;
+    while (true) {
+        cout << "1. Create Tour Train" << endl;
+        cout << "2. Book Tour" << endl;
+        cout << "3. Add Tourist to Tour Train" << endl;
+        cout << "4. Cancel Booking" << endl;
+        cout << "5. Modify Number of Accompanying Persons" << endl;
+        cout << "6. Print Tour Train Information" << endl;
+        cout << "7. Exit" << endl;
+        cout << "Enter Choice: ";
+        cin >> choice;
+        if (choice == 1) {
+            createTourTrain();
+        }
+        else if (choice == 2) {
+            bookTour();
+        }
+        else if (choice == 3) {
+            addTouristToTourTrain();
+        }
+        else if (choice == 4) {
+            cancelBooking();
+        }
+        else if (choice == 5) {
+            modifyNoOfPersons();
+        }
+        else if (choice == 6) {
+            printTourTrainInfo();
+        }
+        else if (choice == 7) {
+            break;
+        }
+    }
+  return 0;
+}
